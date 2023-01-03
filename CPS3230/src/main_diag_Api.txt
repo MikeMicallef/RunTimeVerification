@@ -1,0 +1,17 @@
+digraph _logic_Api {
+rankdir=LR;
+node [shape = circle]; AlertsUploaded AlertsDeleted LoggedIn ViewingAlerts RestartAPI;
+node [shape = point]; _s_s;
+_s_s -> RestartAPI;
+AlertsDeleted -> AlertsDeleted [ label = "(1) RemoveAlerts\\\\TotAlerts = 0 ; "];
+AlertsDeleted -> AlertsUploaded [ label = "(2) UploadAlerts\\TotAlerts < 5 \\TotAlerts ++ ; "];
+AlertsDeleted -> LoggedIn [ label = "(3) LogIn\\\\LoggedIn = true ; "];
+ViewingAlerts -> RestartAPI [ label = "(1) RemoveAlerts\\ViewingAlerts == false \\TotAlerts = 0 ; "];
+RestartAPI -> AlertsUploaded [ label = "(1) UploadAlerts\\TotAlerts < 5 \\TotAlerts ++ ; "];
+RestartAPI -> AlertsDeleted [ label = "(2) RemoveAlerts\\\\TotAlerts = 0 ; "];
+RestartAPI -> LoggedIn [ label = "(3) LogIn\\\\LoggedIn = true ; "];
+AlertsUploaded -> AlertsUploaded [ label = "(1) UploadAlerts\\TotAlerts < 5 \\TotAlerts ++ ; "];
+AlertsUploaded -> AlertsDeleted [ label = "(2) RemoveAlerts\\\\TotAlerts = 0 ; "];
+AlertsUploaded -> LoggedIn [ label = "(3) LogIn\\\\LoggedIn = true ; "];
+LoggedIn -> ViewingAlerts [ label = "(1) ViewingAlerts\\LoggedIn == true \\ViewingAlerts = true ; "];
+}

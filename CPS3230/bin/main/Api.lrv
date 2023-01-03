@@ -1,0 +1,51 @@
+GLOBAL {
+	
+	VARIABLES{
+	 int TotAlerts = 0;
+	 boolean LoggedIn = false;
+	 boolean ViewingAlerts  = false; 
+	 }
+	 
+	  EVENTS{
+	  	LogIn() = {*.LogIn()}
+	  	UploadAlerts()= {*.UploadAlerts()}
+	  	RemoveAlerts()= {*.RemoveAlerts()}
+	  	ViewingAlerts() = {*.ViewingAlerts()}
+	  }
+
+	  %%Properties
+	  PROPERTY Api{
+	  	STATES{
+	  		NORMAL{
+				AlertsUploaded
+				AlertsDeleted
+				LoggedIn
+				ViewingAlerts
+	  		}
+
+	  		STARTING{
+	  			RestartAPI
+	  		}
+
+	  	}
+
+	  	
+
+
+	  	TRANSITIONS{
+	  		RestartAPI -> AlertsUploaded [UploadAlerts\TotAlerts < 5\TotAlerts++;]
+			RestartAPI -> AlertsDeleted [RemoveAlerts\\TotAlerts = 0;]
+	  		RestartAPI -> LoggedIn[LogIn\\LoggedIn=true;]
+	   		AlertsDeleted -> AlertsDeleted [RemoveAlerts\\TotAlerts = 0;]
+			AlertsDeleted -> AlertsUploaded [UploadAlerts\TotAlerts < 5\TotAlerts++;]
+			AlertsDeleted -> LoggedIn[LogIn\\LoggedIn=true;]
+			AlertsUploaded -> AlertsUploaded [UploadAlerts\TotAlerts < 5\TotAlerts++;]
+			AlertsUploaded -> AlertsDeleted [RemoveAlerts\\TotAlerts = 0;]
+			AlertsUploaded -> LoggedIn[LogIn\\LoggedIn=true;]
+			LoggedIn -> ViewingAlerts [ViewingAlerts\LoggedIn==true\ViewingAlerts=true;]
+			ViewingAlerts -> RestartAPI [RemoveAlerts\ViewingAlerts==false\TotAlerts=0;] 
+			
+			}
+	  }
+
+}
